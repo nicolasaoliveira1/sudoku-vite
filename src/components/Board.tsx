@@ -16,6 +16,8 @@ type BoardProps = {
     onSelectCell: (row: number, col: number) => void;
 }
 
+
+
 function Board({grid, selected, onSelectCell} : BoardProps){
     return (
         <div className="grid grid-cols-9 w-fit mx-auto">
@@ -46,6 +48,7 @@ function Board({grid, selected, onSelectCell} : BoardProps){
                 );
             })
         )}
+        
     </div>
     );
 }
