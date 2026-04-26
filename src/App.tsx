@@ -1,6 +1,6 @@
 import './App.css'
 import Board from './components/Board';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 type BoardCell = {
   value: number | null;
@@ -24,7 +24,7 @@ function App() {
 
   const [selected, setSelected] = useState<SelectedCell | null>(null);
 
-  function handleSetCellValue(value: number | null) {
+  const handleSetCellValue = useCallback((value: number | null) => {
     if (!selected) return;
     const { row, col } = selected;
 
@@ -38,7 +38,7 @@ function App() {
       };
       return nextGrid;
     });
-  }
+  }, [selected]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
