@@ -3,22 +3,23 @@ type CellProps = {
     isFixed: boolean;
     onClick: () => void;
     isSelected: boolean;
+    borderClass: string;
 }
 
 
-function Cell({value, isFixed, onClick, isSelected} : CellProps) {
+function Cell({value, isFixed, onClick, isSelected, borderClass} : CellProps) {
     const effectiveSelected = !isFixed && isSelected;
 
     const bgClass = isFixed
-        ? "bg-gray-500"
+        ? "bg-gray-200"
         : effectiveSelected
         ? "bg-blue-200"
         : "bg-gray-200";
 
     const textClass = isFixed
-        ? "text-white"
-        : effectiveSelected
         ? "text-blue-500"
+        : effectiveSelected
+        ? "text-blue-900"
         : "text-black";
 
     return (
@@ -26,14 +27,14 @@ function Cell({value, isFixed, onClick, isSelected} : CellProps) {
             type="button"
             onClick={onClick}
             className={
-                `border text-3xl
+                `text-3xl
                 w-[56px]
                 h-[56px]
                 flex
                 justify-center
                 items-center
                 focus:outline-none
-                ${bgClass} ${textClass} ${!isFixed ? "cursor-pointer" : "cursor-default"}`}
+                ${bgClass} ${textClass} ${borderClass} ${!isFixed ? "cursor-pointer" : "cursor-default"}`}
         >
             <span>{value ?? ""}</span>
         </button>

@@ -59,7 +59,7 @@ function App() {
 
   return (
     <div className='app'>
-      <h1 className="mb-[25px] text-white text-center text-shadow-lg/60 text-[5rem] font-bold">SudokuTS</h1>
+      <h1 className="mb-[40px] text-white text-center text-shadow-lg/60 text-[5rem] font-bold">SudokuTS</h1>
       <div className='text-center text-white text-[20px]'>
         <Board
           grid={grid}
