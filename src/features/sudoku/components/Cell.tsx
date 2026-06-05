@@ -4,6 +4,7 @@ type CellProps = {
   onClick: () => void;
   isSelected: boolean;
   borderClass: string;
+  onCellValueChange?: (value: number | null) => void;
 };
 
 function Cell({ value, isFixed, onClick, isSelected, borderClass }: CellProps) {

@@ -5,9 +5,10 @@ type BoardProps = {
   grid: BoardCell[][];
   selected: SelectedCell | null;
   onSelectCell: (row: number, col: number) => void;
+  onCellValueChange?: (value: number | null) => void;
 };
 
-function Board({ grid, selected, onSelectCell }: BoardProps) {
+function Board({ grid, selected, onSelectCell, onCellValueChange }: BoardProps) {
   return (
     <div className="grid grid-cols-9 w-fit mx-auto">
       {grid.map((row, rowIndex) =>
@@ -33,6 +34,7 @@ function Board({ grid, selected, onSelectCell }: BoardProps) {
               isSelected={selected?.row === rowIndex && selected?.col === colIndex}
               onClick={() => onSelectCell(rowIndex, colIndex)}
               borderClass={borderClass}
+              onCellValueChange={onCellValueChange}
             />
           );
         })
