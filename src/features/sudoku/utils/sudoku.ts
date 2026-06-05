@@ -13,25 +13,66 @@ export function createEmptyBoardGrid(): BoardCell[][] {
   );
 }
 
-export function removeCellsRandom(fullGrid: NumberGrid, removeCount: number): NumberGrid {
-  const puzzle = fullGrid.map((row) => [...row]);
+function hasUniqueSolution(grid: NumberGrid): boolean {
+  const copy = grid.map(r => [...r]);
+  let solutions = 0;
 
-  const positions: Array<{ row: number; col: number }> = [];
-  for (let row = 0; row < 9; row++) {
-    for (let col = 0; col < 9; col++) {
-      positions.push({ row, col });
+  function solve(): void {
+    if (solutions > 1) return;
+
+    let bestRow = -1, bestCol = -1, bestCount = 10;
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (copy[r][c] !== 0) continue;
+        let count = 0;
+        for (let num = 1; num <= 9; num++) {
+          if (isValidMoveNumberGrid(copy, r, c, num)) count++;
+        }
+        if (count === 0) return;
+        if (count < bestCount) { bestCount = count; bestRow = r; bestCol = c; }
+      }
+    }
+
+    if (bestRow === -1) { solutions++; return; }
+
+    for (let num = 1; num <= 9; num++) {
+      if (!isValidMoveNumberGrid(copy, bestRow, bestCol, num)) continue;
+      copy[bestRow][bestCol] = num;
+      solve();
+      copy[bestRow][bestCol] = 0;
     }
   }
 
+  solve();
+  return solutions === 1;
+}
+
+export function removeCellsRandom(fullGrid: NumberGrid, removeCount: number): NumberGrid {
+  const puzzle = fullGrid.map((row) => [...row]);
+  const positions: Array<{ row: number; col: number }> = [];
+
+  for (let row = 0; row < 9; row++)
+    for (let col = 0; col < 9; col++)
+      positions.push({ row, col });
+
+  // embaralha posições
   for (let i = positions.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [positions[i], positions[j]] = [positions[j], positions[i]];
   }
 
-  const toRemove = Math.max(0, Math.min(removeCount, 81));
-  for (let i = 0; i < toRemove; i++) {
-    const { row, col } = positions[i];
+  let removed = 0;
+  for (const { row, col } of positions) {
+    if (removed >= removeCount) break;
+
+    const backup = puzzle[row][col];
     puzzle[row][col] = 0;
+
+    if (!hasUniqueSolution(puzzle)) {
+      puzzle[row][col] = backup; // reverte se perder unicidade
+    } else {
+      removed++;
+    }
   }
 
   return puzzle;
@@ -172,4 +213,35 @@ export function numberGridToBoardWithFixed(numbers: NumberGrid): BoardCell[][] {
       };
     })
   );
+}
+
+export function isBoardSolved(board: BoardCell[][]): boolean {
+  // Check if all cells are filled
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (board[row][col].value === null) {
+        return false;
+      }
+    }
+  }
+
+  // Verify all moves are valid (each number appears only once per row, column, and 3x3 box)
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      const value = board[row][col].value;
+      if (value === null) continue;
+
+      // Temporarily clear the cell to check if it's a valid move
+      board[row][col].value = null;
+      const isValid = isValidMoveBoard(board, row, col, value);
+      // Restore the value
+      board[row][col].value = value;
+
+      if (!isValid) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
