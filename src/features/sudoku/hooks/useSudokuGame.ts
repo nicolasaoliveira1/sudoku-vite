@@ -98,9 +98,6 @@ export function useSudokuGame({ onMove, onComplete, onSolverPlace }: UseSudokuGa
     fillGridBacktracking(solved);
 
     const puzzle = removeCellsRandom(solved, removeCount);
-    
-    const filled = puzzle.flat().filter(n => n !== 0).length;
-    console.log(`Células visíveis: ${filled} (removidas: ${81 - filled})`);
 
     setGrid(numberGridToBoardWithFixed(puzzle));
     setSelected(null);
@@ -147,14 +144,6 @@ export function useSudokuGame({ onMove, onComplete, onSolverPlace }: UseSudokuGa
     },
     [selected, onMove]
   );
-
-  // const onMove = useCallback(() => {
-  //   // This will be implemented by the parent component
-  // }, []);
-
-  // const onComplete = useCallback(() => {
-  //   // This will be implemented by the parent component
-  // }, []);
 
   useEffect(() => {
   if (movedRef.current) {
