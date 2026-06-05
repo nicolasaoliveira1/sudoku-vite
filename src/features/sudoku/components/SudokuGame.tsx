@@ -19,7 +19,7 @@ function SudokuGame() {
     formatTime
   } = useGameStats();
 
-  const playPlace = useSound('/sounds/place.wav', 0.002);
+  const playPlace = useSound(`${import.meta.env.BASE_URL}sounds/place.wav`, 0.06);
   // calcula pitch baseado no progresso do solver
 const getSolverPitch = useCallback(() => {
   const filled = gridRef.current.flat().filter(c => c.value !== null).length;
